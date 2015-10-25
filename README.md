@@ -22,7 +22,7 @@ http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartpho
 
 The following simplified steps are done:
 (see also the inline comments)
-* column indices corresponding to the means and standardard deviations of signals are computed from "features.txt"
+* column indices corresponding to the means and standard deviations of signals are computed from "features.txt"
 * filtered x data of the test set and and training set are merged
 * y data of the test set and and training set are merged
 * the activity column of merged y data is converted to factors with proper levels
