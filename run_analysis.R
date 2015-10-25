@@ -107,7 +107,6 @@ colnames(merged) = cnames
 ################################################################################
 
 merged = tbl_df(merged)
-merged_grouped = group_by(merged, subjectId, activity)
 
 # finding mean for each activity and each subject
 by_act_sub = group_by(merged, subjectId, activity)
