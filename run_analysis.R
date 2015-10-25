@@ -1,26 +1,28 @@
-#cd "/home/smso/coursera/getdata/assignments/proj/UCI HAR Dataset/test"
-#cd "/home/smso/coursera/getdata/assignments/proj/UCI HAR Dataset"
+library(dplyr)
+
+# setup file paths:
+data_folder = "UCI HAR Dataset/"
+train_folder = paste0(data_folder, "train/")
+test_folder = paste0(data_folder, "test/")
+
+################################################################################
+# x data
+################################################################################
 #cat features.txt | grep \\-mean\(\) | wc -l
 #33
 #cat features.txt | grep \\-std\(\) | wc -l
 #33
 
-library(dplyr)
-# setup file paths
-data_folder = "UCI HAR Dataset/"
-train_folder = paste0(data_folder, "train/")
-test_folder = paste0(data_folder, "test/")
-
-# extract features
+# compute indices of features:
 filename = "features.txt"
 filename = paste0(data_folder, filename)
+
 #N.B. stringsAsFactors=F must be added
 features = read.table(filename, stringsAsFactors=F)
 
 indices_mean = grep("-mean\\(\\)", features$V2)
 indices_std = grep("-std\\(\\)", features$V2)
 feature_indices = c(indices_mean, indices_std)
-
 
 
 filename = "X_test.txt"
@@ -35,6 +37,8 @@ filtered_x_train = x_train[, feature_indices]
 
 x_merged = rbind(filtered_x_train, filtered_x_test)
 
+################################################################################
+# y data
 ################################################################################
 filename = "activity_labels.txt"
 filename = paste0(data_folder, filename)
@@ -58,12 +62,17 @@ y_merged = rbind(y_train, y_test)
 y_merged$V1 = as.factor(y_merged$V1)
 levels(y_merged$V1) = activity_labels$V2
 
+################################################################################
+# merge x and y data
+################################################################################
+
 # combine the columns of x and y:
 merged = cbind(x_merged, y_merged)
 #merged = tbl_df(merged)
 
 
-
+################################################################################
+# add subject id as the front column
 ################################################################################
 # prepend the subject id column:
 filename = "subject_test.txt"
@@ -79,9 +88,11 @@ subject_merged = rbind(subject_train, subject_test)
 merged = cbind(subject_merged, merged)
 
 ################################################################################
-# rename columns:
+# rename columns of merged data
+################################################################################
 # most names were taken from features.txt
 cnames = c("subjectId", features$V2[feature_indices], "activity")
+
 #rename column names to make them concise and in camel case
 #e.g.
 #"fBodyBodyGyroMag-mean()" => "fBodyBodyGyroMagMean"
@@ -91,13 +102,23 @@ cnames = gsub("std\\(\\)", "Std", cnames)
 cnames = gsub("-", "", cnames)
 colnames(merged) = cnames
 
+################################################################################
+# compute mean of each variable for each activity and each subject
+################################################################################
 
 merged = tbl_df(merged)
 merged_grouped = group_by(merged, subjectId, activity)
 
-################################################################################
 # finding mean for each activity and each subject
 by_act_sub = group_by(merged, subjectId, activity)
 summarised = summarise_each(by_act_sub, funs(mean))
+
+################################################################################
+# output the results of the last step
+################################################################################
 write.table(summarised, file="summarised.txt", row.name=F)
+
+
+
+
 
