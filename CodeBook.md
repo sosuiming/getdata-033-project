@@ -26,7 +26,7 @@ The data files from the zip file ("getdata_projectfiles_UCI HAR Dataset.zip") in
     * "test/subject_test.txt"
 
 ## Extracted variables
-Only the means and standardard deviations of signals are used which account for 66 features (out of the 561 original ones). 
+Only the means and standard deviations of signals are used which account for 66 features (out of the 561 original ones). 
 The following shows the column names of the merged data (i.e. data frame named "merged") with features properly renamed.
 't' and 'f' stands for time signal and frequency domain signal respectively. 
 'X', 'Y' or 'Z' at the end indicates the direction.
